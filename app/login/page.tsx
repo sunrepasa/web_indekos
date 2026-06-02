@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Mail, Lock, Building2, Eye, EyeOff, CheckCircle2 } from "lucide-react"
+import { Mail, Lock, Building2, Eye, EyeOff } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -10,110 +11,167 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const supabase = createClient()
 
   const handleLogin = async () => {
-    if (email && password) {
-      setLoading(true)
-      await new Promise(r => setTimeout(r, 800))
-      // Set auth token cookie so middleware allows dashboard access
-      document.cookie = "token=demo-token; path=/; max-age=86400"
-      router.push("/dashboard/admin")
-    } else {
-      alert("Isi email dan password")
+    if (!email || !password) {
+      setError("Isi email dan password")
+      return
     }
-  }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleLogin()
+    setError("")
+    setLoading(true)
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (authError) {
+      setError("Login gagal: " + authError.message)
+      setLoading(false)
+      return
+    }
+
+    router.push("/dashboard/admin")
+    router.refresh()
   }
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      
-      {/* LEFT PANEL */}
-      <div className="hidden lg:flex flex-col justify-between bg-zinc-900 p-10 text-white relative">
-        <div className="absolute inset-0 bg-emerald-900/20" />
+    <div className="min-h-screen grid lg:grid-cols-2" style={{ background: "var(--bg)" }}>
+
+      {/* ── LEFT PANEL ── */}
+      <div
+        className="hidden lg:flex flex-col justify-between p-10 text-white relative overflow-hidden"
+        style={{ background: "var(--text-main)" }}
+      >
+        <div className="absolute inset-0" style={{ background: "rgba(5,150,105,0.08)" }} />
+
         {/* Brand */}
-        <div className="relative z-10 flex items-center text-lg font-medium">
-          <Building2 className="mr-2 h-6 w-6" />
+        <div className="relative z-10 flex items-center gap-2 text-lg font-black tracking-tight">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, var(--primary), var(--primary-dark))` }}
+          >
+            <Building2 className="w-4.5 h-4.5" />
+          </div>
           INDEKOS
         </div>
 
         {/* Quote */}
         <div className="relative z-10 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-lg">
+          <blockquote className="space-y-3">
+            <p className="text-lg leading-relaxed opacity-90">
               "Platform manajemen kos ini telah menghemat ratusan jam kerja kami setiap bulannya.
               Sangat direkomendasikan untuk pemilik properti modern!"
             </p>
-            <footer className="text-sm text-zinc-400">Sofia Davis, Property Manager</footer>
+            <footer className="text-sm" style={{ color: "var(--text-xmuted)" }}>
+              Sofia Davis, Property Manager
+            </footer>
           </blockquote>
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
-      <div className="flex items-center justify-center p-8 bg-white relative">
-        {/* Back/Other Links (Top Right) */}
+      {/* ── RIGHT PANEL ── */}
+      <div className="flex items-center justify-center p-8 relative" style={{ background: "var(--surface)" }}>
+        {/* Top help link */}
         <div className="absolute right-4 top-4 md:right-8 md:top-8">
-          <span className="text-sm font-medium text-slate-500">Need help? <a href="#" className="underline underline-offset-4 hover:text-slate-900">Contact Support</a></span>
+          <span className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+            Need help?{" "}
+            <a href="#" className="underline underline-offset-4" style={{ color: "var(--text-sub)" }}>
+              Contact Support
+            </a>
+          </span>
         </div>
 
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[360px]">
+
+          {/* Title */}
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-              Log in to your account
+            <h1 className="text-2xl font-black tracking-tight" style={{ color: "var(--text-main)" }}>
+              Masuk ke Akun
             </h1>
-            <p className="text-sm text-slate-500">
-              Enter your email below to log in to your dashboard
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              Masukkan email dan password untuk mengakses dashboard
             </p>
           </div>
 
-          <form 
-            onSubmit={(e) => { e.preventDefault(); handleLogin(); }}
-            className="space-y-4"
-          >
-            <div className="space-y-2">
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex h-9 w-full rounded-md border border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
-              />
+          {/* Error Message */}
+          {error && (
+            <div
+              className="text-sm font-semibold px-4 py-3 rounded-xl"
+              style={{ background: "var(--error-bg)", color: "var(--error-text)" }}
+            >
+              {error}
             </div>
-            
-            <div className="space-y-2 relative">
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700">
-                Password
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="flex h-9 w-full rounded-md border border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[26px] text-slate-400 hover:text-slate-600 focus:outline-none"
-              >
-                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+          )}
+
+          {/* Form */}
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold" style={{ color: "var(--text-sub)" }}>Email</label>
+              <div className="relative">
+                <Mail
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                  style={{ color: "var(--text-xmuted)" }}
+                />
+                <input
+                  type="email"
+                  placeholder="admin@indekos.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none transition-all"
+                  style={{
+                    border: "1px solid var(--border)",
+                    background: "var(--bg)",
+                    color: "var(--text-main)",
+                  }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "var(--primary)"; e.currentTarget.style.boxShadow = "0 0 0 3px var(--primary-light)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold" style={{ color: "var(--text-sub)" }}>Password</label>
+              <div className="relative">
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                  style={{ color: "var(--text-xmuted)" }}
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-11 pl-10 pr-10 rounded-xl text-sm font-semibold outline-none transition-all"
+                  style={{
+                    border: "1px solid var(--border)",
+                    background: "var(--bg)",
+                    color: "var(--text-main)",
+                  }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "var(--primary)"; e.currentTarget.style.boxShadow = "0 0 0 3px var(--primary-light)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  style={{ color: "var(--text-xmuted)" }}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             <button
-              onClick={handleLogin}
+              type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-600 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white shadow hover:bg-emerald-600/90 h-9 px-4 py-2 w-full mt-2"
+              className="btn-primary w-full h-11 flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
             >
-              {loading ? (
-                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              ) : null}
+              {loading && (
+                <div className="w-4 h-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              )}
               Sign In
             </button>
           </form>
@@ -121,24 +179,28 @@ export default function LoginPage() {
           {/* Demo Info */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-slate-200" />
+              <span className="w-full" style={{ borderTop: "1px solid var(--border)" }} />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-500">Demo Login Details</span>
+              <span className="px-2 font-semibold" style={{ background: "var(--surface)", color: "var(--text-xmuted)" }}>
+                Demo Login
+              </span>
             </div>
           </div>
-          <div className="flex justify-between text-sm text-slate-600 bg-slate-50 border border-slate-100 p-3 rounded-md">
-            <div><strong>Email:</strong> admin</div>
-            <div><strong>Pass:</strong> 123</div>
+          <div
+            className="flex justify-between text-sm font-semibold p-3 rounded-xl"
+            style={{ background: "var(--bg-muted)", border: "1px solid var(--border)", color: "var(--text-sub)" }}
+          >
+            <div><strong style={{ color: "var(--text-main)" }}>Email:</strong> admin@indekos.com</div>
+            <div><strong style={{ color: "var(--text-main)" }}>Pass:</strong> admin123</div>
           </div>
 
-          <p className="px-8 text-center text-sm text-slate-500">
+          <p className="px-8 text-center text-xs" style={{ color: "var(--text-xmuted)" }}>
             By clicking continue, you agree to our{" "}
-            <a href="#" className="underline underline-offset-4 hover:text-slate-900">Terms of Service</a>{" "}
+            <a href="#" className="underline underline-offset-4" style={{ color: "var(--text-muted)" }}>Terms of Service</a>{" "}
             and{" "}
-            <a href="#" className="underline underline-offset-4 hover:text-slate-900">Privacy Policy</a>.
+            <a href="#" className="underline underline-offset-4" style={{ color: "var(--text-muted)" }}>Privacy Policy</a>.
           </p>
-
         </div>
       </div>
     </div>

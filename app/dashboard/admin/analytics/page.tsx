@@ -1,5 +1,3 @@
-import Sidebar from "../../../../components/sidebar/Sidebar";
-import MobileNavbar from "../../../../components/sidebar/MobileNavbar";
 import { BarChart3, TrendingUp, Users, BedDouble, Banknote, AlertCircle } from "lucide-react";
 
 const months = ["Jul", "Agt", "Sep", "Okt", "Nov", "Des", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun"];
@@ -13,11 +11,8 @@ const maxLate = Math.max(...lateData);
 
 export default function AnalyticsPage() {
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--bg)" }}>
-      <Sidebar />
-
-      <div className="flex-1 flex flex-col min-h-screen" style={{ marginLeft: "var(--sidebar-width)" }}>
-        <header
+    <div className="flex-1 flex flex-col">
+      <header
           className="sticky top-0 z-30 flex items-center justify-between px-8 py-4"
           style={{
             background: "rgba(240,253,244,0.85)",
@@ -182,9 +177,6 @@ export default function AnalyticsPage() {
             </div>
           </div>
         </main>
-      </div>
-
-      <MobileNavbar />
     </div>
   );
 }

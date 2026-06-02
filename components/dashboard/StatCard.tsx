@@ -1,3 +1,5 @@
+
+
 import { LucideIcon } from "lucide-react";
 
 interface StatCardProps {
@@ -7,7 +9,7 @@ interface StatCardProps {
   icon: LucideIcon;
   iconBg?: string;
   iconColor?: string;
-  trend?: number; // positive = up, negative = down
+  trend?: number;
   trendLabel?: string;
   delay?: number;
 }
@@ -17,8 +19,8 @@ export default function StatCard({
   value,
   subtitle,
   icon: Icon,
-  iconBg = "#d1fae5",
-  iconColor = "#10b981",
+  iconBg = "var(--primary-light)",
+  iconColor = "var(--primary)",
   trend,
   trendLabel,
   delay = 0,
@@ -27,25 +29,10 @@ export default function StatCard({
 
   return (
     <div
-      className="animate-fade-in-up rounded-3xl p-5 flex flex-col gap-3"
-      style={{
-        background: "var(--surface)",
-        boxShadow: "var(--shadow-card)",
-        animationDelay: `${delay}ms`,
-        border: "1px solid transparent",
-        transition: "all 0.25s ease",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-primary)";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-        (e.currentTarget as HTMLElement).style.border = "1px solid var(--primary-light)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
-      }}
+      className="card animate-fade-in-up rounded-3xl p-5 flex flex-col gap-3 transition-all duration-300 cursor-default hover:-translate-y-[2px] hover:shadow-[var(--shadow-primary)] hover:border-[var(--primary-border)]"
+      style={{ animationDelay: `${delay}ms` }}
     >
+      {/* Icon + Trend */}
       <div className="flex items-start justify-between">
         <div
           className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
@@ -56,10 +43,11 @@ export default function StatCard({
 
         {trend !== undefined && (
           <div
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+            className="badge"
             style={{
-              background: isPositive ? "#d1fae5" : "#fee2e2",
-              color: isPositive ? "#059669" : "#dc2626",
+              background: isPositive ? "var(--status-terisi-bg)" : "var(--status-maintenance-bg)",
+              color: isPositive ? "var(--status-terisi)" : "var(--status-maintenance)",
+              border: `1px solid ${isPositive ? "var(--status-terisi-border)" : "var(--status-maintenance-border)"}`,
             }}
           >
             <span>{isPositive ? "▲" : "▼"}</span>
@@ -68,11 +56,12 @@ export default function StatCard({
         )}
       </div>
 
+      {/* Value + Label */}
       <div>
         <p className="text-2xl font-black" style={{ color: "var(--text-main)", lineHeight: 1.2 }}>
           {value}
         </p>
-        <p className="text-sm font-semibold mt-1" style={{ color: "var(--text-main)" }}>
+        <p className="text-sm font-semibold mt-1" style={{ color: "var(--text-sub)" }}>
           {title}
         </p>
         {(subtitle || trendLabel) && (
