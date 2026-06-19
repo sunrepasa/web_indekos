@@ -1,3 +1,4 @@
+"use client";
 import { UserCheck, Plus, Search, Phone, Mail, Calendar } from "lucide-react";
 
 const penyewaData = [
@@ -130,3 +131,4 @@ export default function PenyewaPage() {
     </div>
   );
 }
+

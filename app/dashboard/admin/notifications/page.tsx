@@ -1,3 +1,4 @@
+"use client";
 import { Bell, CheckCircle2, CreditCard, Users, MessageSquareWarning, AlertCircle, Check } from "lucide-react";
 
 const notifData = [
@@ -162,3 +163,4 @@ export default function NotificationsPage() {
     </div>
   );
 }
+

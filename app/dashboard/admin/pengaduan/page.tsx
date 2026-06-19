@@ -1,3 +1,4 @@
+"use client";
 import { MessageSquareWarning, Clock, CheckCircle2, AlertCircle, Send, Plus } from "lucide-react";
 
 const pengaduanData = [
@@ -209,3 +210,4 @@ export default function PengaduanPage() {
     </div>
   );
 }
+

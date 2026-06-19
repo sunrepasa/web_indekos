@@ -24,6 +24,7 @@ export default function MobileNavbar() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
+    if (!pathname) return false;
     if (href === "/dashboard/admin") return pathname === "/dashboard/admin";
     return pathname.startsWith(href);
   };

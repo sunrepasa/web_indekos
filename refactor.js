@@ -19,7 +19,7 @@ const files = getFiles(path.join(process.cwd(), 'app/dashboard/admin'));
 files.forEach(file => {
   // Normalize slashes for comparison
   const normalizedFile = file.replace(/\\/g, '/');
-  
+
   if (normalizedFile.endsWith('admin/page.tsx') || normalizedFile.includes('/kamar/')) {
     // Skip main pages that were already refactored
     return;
@@ -39,11 +39,11 @@ files.forEach(file => {
   // 2. Regex for wrapper
   const contentRegex = /<div className="flex-1[^>]*>([\s\S]*?)<\/div>\s*<MobileNavbar \/>/m;
   const match = code.match(contentRegex);
-  
+
   if (match) {
     const innerContent = match[1].trim();
     const fullWrapperRegex = /return \(\s*<div className="flex min-h-screen"[^\n]*[\s\S]*?<Sidebar \/>[\s\S]*?<MobileNavbar \/>\s*<\/div>\s*\);/m;
-    
+
     if (fullWrapperRegex.test(code)) {
       code = code.replace(fullWrapperRegex, `return (\n    <div className="flex-1 flex flex-col">\n      ${innerContent}\n    </div>\n  );`);
       fs.writeFileSync(file, code);

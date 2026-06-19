@@ -33,18 +33,14 @@ export default function Sidebar() {
   };
 
   const isActive = (href: string) => {
+    if (!pathname) return false;
     if (href === "/dashboard/admin") return pathname === "/dashboard/admin";
     return pathname.startsWith(href);
   };
 
   return (
     <aside
-      className="fixed left-0 top-0 h-full z-40 lg:flex flex-col hidden w-[280px]"
-      style={{
-        background: "var(--surface)",
-        borderRight: "1px solid var(--border)",
-        boxShadow: "4px 0 24px rgba(15,23,42,0.04)",
-      }}
+      className="h-full flex flex-col w-[var(--sidebar-width)] transition-all bg-[var(--surface)]"
     >
       {/* ── Logo ── */}
       <div className="p-6 pb-4">

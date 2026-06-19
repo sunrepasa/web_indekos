@@ -1,3 +1,4 @@
+"use client";
 import { Users, Plus, Search, Filter, Download } from "lucide-react";
 import Link from "next/link";
 

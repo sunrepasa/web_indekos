@@ -1,3 +1,4 @@
+"use client";
 import {
   Activity,
   CheckCircle2,
@@ -192,3 +193,4 @@ export default function ActivityPage() {
     </div>
   );
 }
+

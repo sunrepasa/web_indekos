@@ -77,9 +77,9 @@ export default function LoginPage() {
         {/* Top help link */}
         <div className="absolute right-4 top-4 md:right-8 md:top-8">
           <span className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
-            Need help?{" "}
-            <a href="#" className="underline underline-offset-4" style={{ color: "var(--text-sub)" }}>
-              Contact Support
+            Belum punya akun?{" "}
+            <a href="/register" className="underline underline-offset-4" style={{ color: "var(--text-sub)" }}>
+              Daftar di sini
             </a>
           </span>
         </div>

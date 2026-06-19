@@ -1,3 +1,4 @@
+"use client";
 import { CreditCard, CheckCircle2, Clock, XCircle, Upload, Calendar } from "lucide-react";
 
 const today = new Date();
@@ -176,3 +177,4 @@ export default function PembayaranPage() {
     </div>
   );
 }
+

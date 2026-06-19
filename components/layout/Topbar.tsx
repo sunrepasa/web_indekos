@@ -4,42 +4,33 @@ import { ThemeToggle } from "./ThemeToggle";
 export function Topbar() {
   return (
     <header
-      className="sticky top-0 z-30 glass"
+      className="sticky top-0 z-30 transition-all bg-[var(--surface)]"
       style={{ borderBottom: "1px solid var(--border)" }}
     >
-      <div className="flex items-center justify-between px-6 lg:px-8 py-4">
-        <div>
-          <h2 className="text-xl font-black" style={{ color: "var(--text-main)" }}>
-            Superadmin 👋
-          </h2>
-          <p className="text-sm font-semibold hidden sm:block" style={{ color: "var(--text-muted)" }}>
-            Sistem Manajemen Indekos
-          </p>
+      <div className="flex items-center justify-between px-6 lg:px-10 py-5">
+        {/* Search - Left aligned like Donezo */}
+        <div
+          className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-2xl transition-all"
+          style={{
+            background: "var(--bg-muted)",
+            border: "1px solid var(--border)",
+            minWidth: "280px"
+          }}
+        >
+          <Search className="w-4 h-4" style={{ color: "var(--text-xmuted)" }} />
+          <input
+            placeholder="Search something..."
+            className="outline-none text-sm font-semibold bg-transparent w-full"
+            style={{ color: "var(--text-main)" }}
+          />
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Search */}
-          <div
-            className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-full transition-all"
-            style={{
-              background: "var(--bg-muted)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <Search className="w-4 h-4" style={{ color: "var(--text-xmuted)" }} />
-            <input
-              placeholder="Ketik untuk mencari..."
-              className="outline-none text-sm font-semibold bg-transparent w-[140px] lg:w-[200px]"
-              style={{ color: "var(--text-main)" }}
-            />
-          </div>
-
-          {/* Theme Toggle */}
+        <div className="flex items-center gap-4 ml-auto">
           <ThemeToggle />
 
           {/* Notif Bell */}
           <button
-            className="relative w-10 h-10 rounded-full flex items-center justify-center transition-all"
+            className="w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
             style={{
               background: "var(--surface)",
               border: "1px solid var(--border)",
@@ -57,13 +48,21 @@ export function Topbar() {
 
           {/* Avatar Profil */}
           <button
-            className="w-10 h-10 rounded-full border-2 overflow-hidden flex items-center justify-center cursor-pointer transition-all"
-            style={{
-              background: "var(--primary-light)",
-              borderColor: "var(--primary-border)",
-            }}
+            className="flex items-center gap-2 pl-1.5 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:bg-[var(--bg-muted)]"
           >
-            <span className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>AD</span>
+            <div
+              className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center"
+              style={{
+                background: "var(--primary-light)",
+                border: "1px solid var(--primary-border)"
+              }}
+            >
+              <span className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>AD</span>
+            </div>
+            <div className="hidden sm:flex flex-col items-start -space-y-0.5">
+              <span className="text-sm font-bold" style={{ color: "var(--text-main)" }}>Admin</span>
+              <span className="text-[10px] font-semibold" style={{ color: "var(--text-xmuted)" }}>administrator@kos.st</span>
+            </div>
           </button>
         </div>
       </div>

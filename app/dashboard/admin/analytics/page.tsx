@@ -1,3 +1,4 @@
+"use client";
 import { BarChart3, TrendingUp, Users, BedDouble, Banknote, AlertCircle } from "lucide-react";
 
 const months = ["Jul", "Agt", "Sep", "Okt", "Nov", "Des", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun"];
@@ -180,3 +181,4 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
