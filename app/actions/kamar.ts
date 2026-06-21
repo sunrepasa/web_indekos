@@ -27,7 +27,7 @@ export async function kamarTambahAction(formData: FormData) {
   } catch (error: any) {
     console.error("Action error:", error)
     if (error instanceof ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: (error as any).errors[0].message }
     }
     if (error.message?.includes("violates unique constraint")) {
       return { success: false, error: "Nomor kamar tersebut sudah dipakai! Silakan pilih nomor lain." }
@@ -58,7 +58,7 @@ export async function kamarEditAction(formData: FormData) {
   } catch (error: any) {
     console.error("Action error:", error)
     if (error instanceof ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: (error as any).errors[0].message }
     }
     if (error.message?.includes("violates unique constraint")) {
       return { success: false, error: "Nomor kamar tersebut sudah dipakai! Silakan pilih nomor lain." }
