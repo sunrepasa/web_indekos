@@ -4,6 +4,7 @@ import { KamarGridSkeleton } from '@/components/kamar/KamarGridSkeleton'
 import StatCard from '@/components/dashboard/StatCard'
 import { Suspense } from 'react'
 import { BedDouble, Users, Wrench, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
 
 export default async function KamarPage() {
   const [kamarList, stats] = await Promise.all([getAllKamar(), getKamarStats()])
@@ -20,10 +21,10 @@ export default async function KamarPage() {
             Kelola seluruh kamar properti indekos kamu
           </p>
         </div>
-        <button className="btn-primary self-start sm:self-auto flex items-center gap-2">
+        <Link href="/dashboard/admin/kamar/tambah" className="btn-primary self-start sm:self-auto flex items-center gap-2" style={{ textDecoration: 'none' }}>
           <span className="text-lg leading-none">+</span>
           Tambah Kamar
-        </button>
+        </Link>
       </div>
 
       {/* Stats Row */}

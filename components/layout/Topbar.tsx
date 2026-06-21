@@ -1,29 +1,38 @@
-import { Search, Bell } from "lucide-react";
+import { Bell } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { createClient } from "@/lib/supabase/server";
 
-export function Topbar() {
+export async function Topbar() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let fullName = "Admin";
+  let email = "admin@indekos.com";
+  let initials = "AD";
+
+  if (user) {
+    email = user.email || email;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.full_name) {
+      fullName = profile.full_name;
+      initials = fullName.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
+    } else {
+      fullName = "Admin";
+    }
+  }
   return (
     <header
       className="sticky top-0 z-30 transition-all bg-[var(--surface)]"
       style={{ borderBottom: "1px solid var(--border)" }}
     >
       <div className="flex items-center justify-between px-6 lg:px-10 py-5">
-        {/* Search - Left aligned like Donezo */}
-        <div
-          className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-2xl transition-all"
-          style={{
-            background: "var(--bg-muted)",
-            border: "1px solid var(--border)",
-            minWidth: "280px"
-          }}
-        >
-          <Search className="w-4 h-4" style={{ color: "var(--text-xmuted)" }} />
-          <input
-            placeholder="Search something..."
-            className="outline-none text-sm font-semibold bg-transparent w-full"
-            style={{ color: "var(--text-main)" }}
-          />
-        </div>
+        {/* Start (Kosong untuk memberi ruang) */}
+        <div></div>
 
         <div className="flex items-center gap-4 ml-auto">
           <ThemeToggle />
@@ -57,11 +66,11 @@ export function Topbar() {
                 border: "1px solid var(--primary-border)"
               }}
             >
-              <span className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>AD</span>
+              <span className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>{initials}</span>
             </div>
-            <div className="hidden sm:flex flex-col items-start -space-y-0.5">
-              <span className="text-sm font-bold" style={{ color: "var(--text-main)" }}>Admin</span>
-              <span className="text-[10px] font-semibold" style={{ color: "var(--text-xmuted)" }}>administrator@kos.st</span>
+            <div className="hidden sm:flex flex-col items-start -space-y-0.5 max-w-[120px]">
+              <span className="text-sm font-bold truncate w-full text-left" style={{ color: "var(--text-main)" }}>{fullName}</span>
+              <span className="text-[10px] font-semibold truncate w-full text-left" style={{ color: "var(--text-xmuted)" }}>{email}</span>
             </div>
           </button>
         </div>

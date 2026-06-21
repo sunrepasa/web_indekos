@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import type { Database } from '@/types/database'
 
 type KamarInsert = Database['public']['Tables']['kamar']['Insert']
@@ -6,7 +7,7 @@ type KamarUpdate = Database['public']['Tables']['kamar']['Update']
 
 // ─── READ ───────────────────────────────────────────────
 export async function getAllKamar() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('kamar')
     .select(`
@@ -29,7 +30,7 @@ export async function getAllKamar() {
 }
 
 export async function getKamarById(id: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('kamar')
     .select(`
@@ -48,7 +49,7 @@ export async function getKamarById(id: string) {
 
 // ─── CREATE ─────────────────────────────────────────────
 export async function createKamar(input: KamarInsert) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('kamar')
     .insert(input)
@@ -61,7 +62,7 @@ export async function createKamar(input: KamarInsert) {
 
 // ─── UPDATE ─────────────────────────────────────────────
 export async function updateKamar(id: string, input: KamarUpdate) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   // Ensure we are passing updated_at if needed, but not forcing it since type might not expect it this way
   const { data, error } = await supabase
     .from('kamar')
@@ -76,7 +77,7 @@ export async function updateKamar(id: string, input: KamarUpdate) {
 
 // ─── DELETE ─────────────────────────────────────────────
 export async function deleteKamar(id: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { error } = await supabase
     .from('kamar')
     .delete()
@@ -87,7 +88,7 @@ export async function deleteKamar(id: string) {
 
 // ─── STATS ──────────────────────────────────────────────
 export async function getKamarStats() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('kamar')
     .select('status')
@@ -101,3 +102,16 @@ export async function getKamarStats() {
     maintenance: data.filter(k => k.status === 'maintenance').length,
   }
 }
+
+export async function getKamarTersedia() {
+  const supabase = createAdminClient()
+  const { data, error } = await supabase
+    .from('kamar')
+    .select('id, nomor, lantai, tipe, harga_per_bulan')
+    .eq('status', 'tersedia')
+    .order('nomor')
+
+  if (error) throw new Error(error.message)
+  return data
+}
+

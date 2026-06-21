@@ -1,5 +1,7 @@
 "use client";
 import { UserCheck, Plus, Search, Phone, Mail, Calendar } from "lucide-react";
+import Link from "next/link";
+
 
 const penyewaData = [
   { id: "1", nama: "Ahmad Rizki", nik: "3271234567890001", hp: "081234567890", email: "ahmad@mail.com", kamar: "A-01", kontrak: "1 Jan 2024 – 31 Des 2024", status: "Aktif" },
@@ -29,12 +31,13 @@ export default function PenyewaPage() {
               <p className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>Kelola data penyewa kos</p>
             </div>
           </div>
-          <button
+          <Link
+            href="/dashboard/admin/penyewa/tambah"
             className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white rounded-full"
-            style={{ background: "linear-gradient(135deg, #10b981, #059669)", border: "none", cursor: "pointer", boxShadow: "0 4px 16px rgba(16,185,129,0.3)" }}
+            style={{ background: "linear-gradient(135deg, #10b981, #059669)", border: "none", cursor: "pointer", boxShadow: "0 4px 16px rgba(16,185,129,0.3)", textDecoration: "none" }}
           >
             <Plus style={{ width: 15, height: 15 }} /> Tambah Penyewa
-          </button>
+          </Link>
         </header>
 
         <main className="flex-1 p-6 lg:p-8 pb-24 lg:pb-8">
